@@ -10,7 +10,6 @@ let greensConsecutivos = 0;
 let greensSG = 0;
 let greensG1 = 0;
 let greensG2 = 0;
-let greens = greensSG+greensG1+greensG2;
 let reds = 0;
 
 async function enviarMensagemTelegram(chat_id, mensagem, replyToMessageId = null) {
@@ -27,7 +26,7 @@ async function enviarMensagemTelegram(chat_id, mensagem, replyToMessageId = null
 }
 
 bot.onText(/\/start/, () => {
-  bot.sendMessage(1905184571, `🚀 *Placar do dia:* 🟢 ${greens}  🔴 ${reds}\n\n🎯  SG ${greensSG} | G1 ${greensG1} | G2 ${greensG2}\n\n💰 *Estamos com ${greensConsecutivos} Greens seguidos!*`, { parse_mode: 'Markdown' });
+  bot.sendMessage(1905184571, `🚀 *Placar do dia:* 🟢 ${greensSG+greensG1+greensG2}  🔴 ${reds}\n\n🎯  SG ${greensSG} | G1 ${greensG1} | G2 ${greensG2}\n\n💰 *Estamos com ${greensConsecutivos} Greens seguidos!*`, { parse_mode: 'Markdown' });
 });
 
 (async () => {
