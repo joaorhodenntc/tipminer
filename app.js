@@ -1,9 +1,7 @@
 const puppeteer = require('puppeteer');
 
 (async () => {
-  const browser = await puppeteer.launch({
-    args: ['--no-sandbox']
-  });
+  const browser = await puppeteer.launch();
   const page = await browser.newPage();
   
   await page.goto('https://www.tipminer.com/historico/pragmatic/roleta-brasileira?limit=1&t=1724209457366&subject=filter');
