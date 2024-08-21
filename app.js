@@ -3,9 +3,15 @@ const TelegramBot = require('node-telegram-bot-api');
 
 const token = '7346261146:AAERS6EyX2kU4ATsJ0IVZPwy2or65i5uwDE';
 const chat_bot = '-1002235800968';
-const bot = new TelegramBot(token, { polling: false });
+const bot = new TelegramBot(token, { polling: true });
 
 let lastMainMessageId = null;
+let greensConsecutivos = 0;
+let greensSG = 0;
+let greensG1 = 0;
+let greensG2 = 0;
+let greens = greensSG+greensG1+greensG2;
+let reds = 0;
 
 async function enviarMensagemTelegram(chat_id, mensagem, replyToMessageId = null) {
   try {
@@ -19,6 +25,10 @@ async function enviarMensagemTelegram(chat_id, mensagem, replyToMessageId = null
     console.error('Erro ao enviar mensagem para o Telegram:', error);
   }
 }
+
+bot.onText(/\/start/, () => {
+  bot.sendMessage(1905184571, `🚀 *Placar do dia:* 🟢 ${greens}  🔴 ${reds}\n\n🎯  SG ${greensSG} | G1 ${greensG1} | G2 ${greensG2}\n\n💰 *Estamos com ${greensConsecutivos} Greens seguidos!*`, { parse_mode: 'Markdown' });
+});
 
 (async () => {
   const browser = await puppeteer.launch({
@@ -65,12 +75,18 @@ async function enviarMensagemTelegram(chat_id, mensagem, replyToMessageId = null
 
         if(imparesConsecutivos === qtdRepeticoes){
           await enviarMensagemTelegram(chat_bot, `GREEN (${number}) ✅`, lastMainMessageId);
+          greensSG++
+          greensConsecutivos++;
         }
         if(imparesConsecutivos === qtdRepeticoes+1){
           await enviarMensagemTelegram(chat_bot, `GREEN (${g1} | ${number}) ✅`, lastMainMessageId);
+          greensG1++
+          greensConsecutivos++;
         }
         if(imparesConsecutivos === qtdRepeticoes+2){
           await enviarMensagemTelegram(chat_bot, `GREEN (${g1} | ${g2} | ${number}) ✅`,lastMainMessageId);
+          greensG2++;
+          greensConsecutivos++;
         }
         imparesConsecutivos = 0; 
 
@@ -80,12 +96,18 @@ async function enviarMensagemTelegram(chat_id, mensagem, replyToMessageId = null
 
         if(paresConsecutivos === qtdRepeticoes){
           await enviarMensagemTelegram(chat_bot, `GREEN (${number}) ✅`, lastMainMessageId);
+          greensSG++
+          greensConsecutivos++;
         }
         if(paresConsecutivos === qtdRepeticoes+1){
           await enviarMensagemTelegram(chat_bot, `GREEN (${g1} | ${number}) ✅`, lastMainMessageId);
+          greensG1++
+          greensConsecutivos++;
         }
         if(paresConsecutivos === qtdRepeticoes+2){
           await enviarMensagemTelegram(chat_bot, `GREEN (${g1} | ${g2} | ${number}) ✅`, lastMainMessageId);
+          greensG2++;
+          greensConsecutivos++;
         }
         paresConsecutivos = 0; 
       }
@@ -101,6 +123,8 @@ async function enviarMensagemTelegram(chat_id, mensagem, replyToMessageId = null
       }
       if(paresConsecutivos === qtdRepeticoes+3){
         await enviarMensagemTelegram(chat_bot, `RED (${g1} | ${g2} | ${number}) 🔻`, lastMainMessageId);
+        reds++
+        greensConsecutivos = 0;
       } 
 
       if(imparesConsecutivos === qtdRepeticoes){
@@ -114,6 +138,8 @@ async function enviarMensagemTelegram(chat_id, mensagem, replyToMessageId = null
       }
       if(imparesConsecutivos === qtdRepeticoes+3){
         await enviarMensagemTelegram(chat_bot, `RED (${g1} | ${g2} | ${number}) 🔻`, lastMainMessageId);
+        reds++;
+        greensConsecutivos = 0;
       } 
 
     }
