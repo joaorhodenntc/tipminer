@@ -12,6 +12,7 @@ const puppeteer = require('puppeteer');
   let consecutiveEvenCount = 0;
 
   const checkForUpdates = async () => {
+    await page.waitForSelector('.grid__row.flex.flex-1.flex-row.items-start.justify-between');
     const data = await page.evaluate(() => {
       const gridRow = document.querySelector('.grid__row.flex.flex-1.flex-row.items-start.justify-between');
       
